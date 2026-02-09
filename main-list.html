@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="icon" type="image/png" href="images/profile-picture.png">
+
+        <!-- Bootstrap and CSS Linking -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+        <link rel="stylesheet" href="styles.css" type="text/css">
+        
+        <script src="script.js"></script>
+        
+        <!-- Fonts -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Funnel+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+
+        <title>Main List</title>
+    </head>
+
+    <body onload="loadLevels()">
+        <nav class="navbar navbar-expand-lg">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="index.html">
+                    <img class="rounded-5 me-1" src="images/profile-picture.png" alt="Profile Picture", width="50" height="50">Demon List
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav mb-1 gap-2" id="navbarList">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Main List</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="extended-list.html">Extended List</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="legacy-list.html">Legacy List</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <hr id="nav-hr">
+        <main>
+            <h1 id="title" class="white-bold">The <span class="purple-bold">Main</span> List</h1>
+            <p id="subtitle">Consists of the 75 hardest rated levels I've completed.</p>
+            <div class="loader-container">
+                <div class="box-loader"></div>
+            </div>
+
+            <div class="levels-container animate-bottom">
+                <template>
+                    <a class="mx-auto card-container" href="javascript:;">
+                        <div class="card">
+                            <div class="card-image">
+                                <img src="">
+                            </div>
+                            
+                            <div class="info-top">
+                                <p>#<span class="rank"></span>: <span class="name white-bold"></span> by <span class="creator white-bold"></span></p>
+                                <p><span class="date-completed white-bold">May 4th, 2025</span></p>
+                            </div>
+
+                            <div class="info-left">
+                                <div class="info-block">
+                                    <p>Rating</p>
+                                    <p><span class="rating purple-bold"></span></p>
+                                </div>
+
+                                <div class="info-block">
+                                    <p>IDS/NLW</p>
+                                    <p><span class="ids-nlw-tier purple-bold"></span></p>
+                                </div>
+
+                                <div class="info-block">
+                                    <p>GDDL</p>
+                                    <p><span class="gddl purple-bold"></span></p>
+                                </div>
+
+                                <div class="info-block">
+                                    <p>ID</p>
+                                    <p><span class="id purple-bold"></span></p>
+                                </div>
+                            </div>
+                                
+                            <div class="info-right">
+                                <div class="info-block">
+                                    <p>Enjoyment</p>
+                                    <p><span class="enjoyment purple-bold"></span></p>
+                                </div>
+
+                                <div class="info-block">
+                                    <p>Attempts</p>
+                                    <p><span class="attempts purple-bold"></span></p>
+                                </div>
+
+                                <div class="info-block">
+                                    <p>Worst Fail</p>
+                                    <p><span class="worst-fail purple-bold"></span></p>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </template>
+            </div>
+        </main>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    </body>
+</html>

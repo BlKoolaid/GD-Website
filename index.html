@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="icon" type="image/png" href="images/profile-picture.png">
+
+        <!-- Bootstrap and CSS Linking -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+        <link rel="stylesheet" href="styles.css" type="text/css">
+
+        <script src="script.js"></script>
+        
+        <!-- Fonts -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Funnel+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+
+        <title>Home</title>
+    </head>
+
+    <body onload="makeUpdates()">
+        <nav class="navbar navbar-expand-lg">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#">
+                    <img class="rounded-5 me-1" src="images/profile-picture.png" alt="Profile Picture", width="50" height="50">Demon List
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav mb-1 gap-2" id="navbarList">
+                        <li class="nav-item">
+                            <a class="nav-link" href="main-list.html">Main List</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="extended-list.html">Extended List</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="legacy-list.html">Legacy List</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <hr id="nav-hr">
+        <main>
+            <div id="welcome-box" class="mx-auto box">
+                <h1>Welcome to my <span class="purple-bold">Demon List</span>!</h1>
+                <p>
+                    <!-- This is a collection of the Top 150 hardest levels I've beaten in Geometry Dash sorted by GDDL ratings. -->
+                    This is a collection of the Top 150 hardest levels I've beaten in Geometry Dash. 
+                    I've split them into <span class="purple-bold">three</span> sections based on how other GD lists work:
+                </p>
+                
+                <ul>
+                    <li><span class="purple-bold">Main List</span> (the top 75 hardest levels)</li>
+                    <li><span class="purple-bold">Extended List</span> (the remaining levels in the top 150)</li>
+                    <li><span class="purple-bold">Legacy List</span> (levels that have fallen out of the top 150)</li>
+                </ul>
+
+                <p>Those lists are sorted by my personal opinions, but the collections below use <span class="purple-bold">GDDL</span> tiers for the rankings.</p>
+                <hr>
+                <!-- <p>On top of that, I've also added in a seperate platformer section.</p> -->
+                <div class="loader-container">
+                    <div class="box-loader"></div>
+                </div>
+                <p id="demon-counts" class="animate-bottom"></p>
+                <!-- update p tag to include platformers whenever i decide to add that -->
+                
+                <div>
+                    <a id="viewList" href="main-list.html" class="btn btn-custom" role="button">View Main List</a>
+                </div>
+            </div>
+
+            <!-- Other Stuff I may wanna add -->
+            <div id="lists-container" class="mx-auto">
+                <div class="box" id="abc-box">
+                    <h2>Hardest ABC Completions</h2>
+                    <hr>
+                    <div class="loader-container">
+                        <div class="box-loader"></div>
+                    </div>
+                    <ul class="list animate-bottom"></ul>
+                </div>
+
+                <div class="box" id="month-box">
+                    <h2>Hardest Monthly Completions</h2>
+                    <hr>
+                    <div class="loader-container">
+                        <div class="box-loader"></div>
+                    </div>
+                    <ul class="list animate-bottom"></ul>
+                </div>
+
+                <div class="box" id="attempt-box">
+                    <h2>Top 10 Attempt Counts</h2>
+                    <hr>
+                    <div class="loader-container">
+                        <div class="box-loader"></div>
+                    </div>
+                    <ol class="list animate-bottom"></ol>
+                </div>
+
+                <div class="box" id="changelog-box">
+                    <h2>List Changelog:</h2>
+                    <hr>
+                    <div class="loader-container">
+                        <div class="box-loader"></div>
+                    </div>
+                    <div id="changelogs" class="animate-bottom"></div>
+                    <div id="changelog-pages"></div>
+                </div>
+            </div>
+        </main>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    </body>
+</html>
+
+<!-- Next Goals -->
+    <!-- start layout for Main List -->
+
+    <!-- Future -->
+        <!-- platformer levels in seperate list-->
+        <!-- Add top 10 memory levels? (probably not) -->
