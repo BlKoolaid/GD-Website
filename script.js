@@ -187,7 +187,7 @@ function formatUpdate(update)
         }
     }
 
-    const listChangeExpr = /^(?<newLevel>.+?) has been (?<placementPhrase>placed at|moved from) ((?<oldRank>#\d+) to )?(?<newRank>#\d+)((, (above (?<levelAbove>.+?))?( and )?(below (?<levelBelow>.+?))?))?\./; // might fail with a level with an "and" in it
+    const listChangeExpr = /^(?<newLevel>.+?) has been (?<placementPhrase>retroactively added at|placed at|moved from) ((?<oldRank>#\d+) to )?(?<newRank>#\d+)((, (above (?<levelAbove>.+?))?( and )?(below (?<levelBelow>.+?))?))?\./; // might fail with a level with an "and" in it
     const match = update.match(listChangeExpr);
     if (match) 
     {
