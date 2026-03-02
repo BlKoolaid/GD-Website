@@ -366,47 +366,53 @@ function updateChangelog(clickedPage = 1)
     updateActivePage(clickedPage);
 }
 
-async function makeUpdates()
-{
-    // note: takes a little to update after making a sheet change
-    const [demonCounts, lists] = await fetchSheetData();
-    updateBoxes(demonCounts, lists);
-    updateChangelog();
-}
-
-async function fetchSheetData()
+async function fetchSheetData(isLoadingListTab = false)
 {
     const isReload = performance.getEntriesByType('navigation')[0]?.type === 'reload' || performance.navigation?.type === 1;
-    let changelogData = sessionStorage.getItem("changelog");
 
-    if (!changelogData || isReload)
+    let changelogData = localStorage.getItem("changelog");
+    if (changelogData)
+    {
+        listChangelog = parseChangelog(changelogData);
+        pageCount = Math.ceil(listChangelog.size / PAGE_MARKER);
+        if (!isLoadingListTab) updateChangelog();
+    }
+
+    let listData = localStorage.getItem("demon-list");
+    if (listData)
+    {
+        const [demonListData, demonCounts, ...lists] = parseDemonList(listData); // ... gets the rest of the list to the variable
+        demonList = demonListData;
+        if (!isLoadingListTab) updateBoxes(demonCounts, lists);
+    }
+
+    if (isReload)
     {
         const changelogURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQiHBiXlIZGJzidxWfpn4PbMhVRP_xO0ozivg0J60YqW9lAmU99lgala5r4Fc7BT84aX28ZxkKWLEPi/pub?gid=1804136036&single=true&output=tsv";
-        const response = await fetch(changelogURL);
-        changelogData = await response.text();
-        sessionStorage.setItem("changelog", changelogData);
-    }
-    // let changelogData = localStorage.getItem("changelog"); // temp
-    
-    let listData = sessionStorage.getItem("demon-list");
-    if (!listData || isReload)
-    {
         const demonListURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQiHBiXlIZGJzidxWfpn4PbMhVRP_xO0ozivg0J60YqW9lAmU99lgala5r4Fc7BT84aX28ZxkKWLEPi/pub?gid=1881466420&single=true&output=tsv";
-        const response = await fetch(demonListURL);
-        listData = await response.text();
-        sessionStorage.setItem("demon-list", listData);
-    }
-    listChangelog = parseChangelog(changelogData);
-    pageCount = Math.ceil(listChangelog.size / PAGE_MARKER);
+        
+        let response = await fetch(changelogURL);
+        changelogData = await response.text();
+        localStorage.setItem("changelog", changelogData);
 
-    const [demonListData, demonCounts, ...lists] = parseDemonList(listData); // ... gets the rest of the list to the variable
-    demonList = demonListData;
-    return [demonCounts, lists];
+        listChangelog = parseChangelog(changelogData);
+        pageCount = Math.ceil(listChangelog.size / PAGE_MARKER);
+        if (!isLoadingListTab) updateChangelog();
+
+        response = await fetch(demonListURL);
+        listData = await response.text();
+        localStorage.setItem("demon-list", listData);
+
+        const [demonListData, demonCounts, ...lists] = parseDemonList(listData); // ... gets the rest of the list to the variable
+        demonList = demonListData;
+        if (!isLoadingListTab) updateBoxes(demonCounts, lists);
+    }
 }
 
 async function loadLevels()
 {
-    await fetchSheetData();
+    const isLoadingListTab = true
+    await fetchSheetData(isLoadingListTab);
     addLevels();
 
     const listElem = document.querySelector(".levels-container");
