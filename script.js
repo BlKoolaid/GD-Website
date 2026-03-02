@@ -383,7 +383,13 @@ async function fetchSheetData(isLoadingListTab = false)
     {
         const [demonListData, demonCounts, ...lists] = parseDemonList(listData); // ... gets the rest of the list to the variable
         demonList = demonListData;
-        if (!isLoadingListTab) updateBoxes(demonCounts, lists);
+        if (isLoadingListTab) {
+            addLevels();
+            updateListVisuals();
+        }
+        else {
+            updateBoxes(demonCounts, lists);
+        }
     }
 
     if (isReload)
@@ -405,7 +411,13 @@ async function fetchSheetData(isLoadingListTab = false)
 
         const [demonListData, demonCounts, ...lists] = parseDemonList(listData); // ... gets the rest of the list to the variable
         demonList = demonListData;
-        if (!isLoadingListTab) updateBoxes(demonCounts, lists);
+        if (isLoadingListTab) {
+            addLevels();
+            updateListVisuals();
+        }
+        else {
+            updateBoxes(demonCounts, lists);
+        }
     }
 }
 
@@ -413,13 +425,6 @@ async function loadLevels()
 {
     const isLoadingListTab = true
     await fetchSheetData(isLoadingListTab);
-    addLevels();
-
-    const listElem = document.querySelector(".levels-container");
-    listElem.style.display = "block";
-
-    const boxLoader = document.querySelector(".loader-container");
-    boxLoader.style.display = "none";
 }
 
 function getLevelThumbnail(imageElem, id) {
@@ -428,12 +433,13 @@ function getLevelThumbnail(imageElem, id) {
 }
 
 // non home page
-async function addLevels() 
+function addLevels() 
 {
     const listElem = document.querySelector(".levels-container");
     const templateElem = document.getElementsByTagName("template")[0];
     const cardTemplate = templateElem.content.querySelector("a");
     
+    listElem.innerHTML = "";
     let demonListSets = Array.from(demonList.entries());
     const pageName = location.pathname.split("/").pop();
     if (pageName == "main-list.html")
@@ -474,4 +480,13 @@ async function addLevels()
         levelCard.style.backgroundImage = `url(${mainImage}), url("https://levelthumbs.prevter.me/thumbnail/${id}")`;
         listElem.appendChild(levelCard);
     }
+}
+
+function updateListVisuals()
+{
+    const listElem = document.querySelector(".levels-container");
+    listElem.style.display = "block";
+
+    const boxLoader = document.querySelector(".loader-container");
+    boxLoader.style.display = "none";
 }
