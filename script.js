@@ -394,6 +394,9 @@ async function fetchSheetData(isLoadingListTab = false)
 
     if (isReload)
     {
+        const updateContainer = document.querySelector(".update-container");
+        updateContainer.style.opacity = 100;
+
         const changelogURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQiHBiXlIZGJzidxWfpn4PbMhVRP_xO0ozivg0J60YqW9lAmU99lgala5r4Fc7BT84aX28ZxkKWLEPi/pub?gid=1804136036&single=true&output=tsv";
         const demonListURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQiHBiXlIZGJzidxWfpn4PbMhVRP_xO0ozivg0J60YqW9lAmU99lgala5r4Fc7BT84aX28ZxkKWLEPi/pub?gid=1881466420&single=true&output=tsv";
         
@@ -418,6 +421,7 @@ async function fetchSheetData(isLoadingListTab = false)
         else {
             updateBoxes(demonCounts, lists);
         }
+        hideUpdateContainer();
     }
 }
 
@@ -489,4 +493,12 @@ function updateListVisuals()
 
     const boxLoader = document.querySelector(".loader-container");
     boxLoader.style.display = "none";
+}
+
+function hideUpdateContainer() 
+{
+    const updateContainer = document.querySelector(".update-container");
+    console.log("made it");
+    updateContainer.classList.add('update-animate');
+    updateContainer.style.opacity = 0;
 }
