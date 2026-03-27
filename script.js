@@ -368,7 +368,9 @@ function updateChangelog(clickedPage = 1)
 
 async function fetchSheetData(isLoadingListTab = false)
 {
-    const isReload = performance.getEntriesByType('navigation')[0]?.type === 'reload' || performance.navigation?.type === 1;
+    const isReload = performance.getEntriesByType('navigation')[0].type === 'reload';
+    const isNavigate = performance.getEntriesByType('navigation')[0].type === 'navigate';
+    const isHomePage = location.pathname.split("/").pop() === "index.html";
 
     let changelogData = localStorage.getItem("changelog");
     if (changelogData)
@@ -392,7 +394,7 @@ async function fetchSheetData(isLoadingListTab = false)
         }
     }
 
-    if (isReload)
+    if (isReload || isHomePage && isNavigate)
     {
         const updateContainer = document.querySelector(".update-container");
         updateContainer.style.opacity = 100;
@@ -498,7 +500,6 @@ function updateListVisuals()
 function hideUpdateContainer() 
 {
     const updateContainer = document.querySelector(".update-container");
-    console.log("made it");
     updateContainer.classList.add('update-animate');
     updateContainer.style.opacity = 0;
 }
