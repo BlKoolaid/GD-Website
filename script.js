@@ -307,10 +307,10 @@ function getDateSuffix(day)
   }
 }
 
-function getListEntry(row, listIndexes)
+function getListEntry(row, listIndexes, videoLink)
 {
     let [rank, name, creator, difficulty, id, gddlTier, idsNLWTier, rating, enjoyment, attempts, worstFail] = row;
-    const completionDate = row[listIndexes.completionDate], videoLink = row[listIndexes.videoLink];
+    const completionDate = row[listIndexes.completionDate];
 
     difficulty = difficulty.replace("Demon", "");
     const [month, day, year] = completionDate.split('/');
@@ -334,13 +334,21 @@ function parseDemonList(data)
 
     const attemptMessage = `<li><span class="purple-bold">$<level></span> (Tier $<tier>) - $<attempts></li>`;
     let attemptExpr = /\d+\. (?<level>.+) :tier(?<tier>\d+): - (?<attempts>.+)$/;
+
+    const videoLinks = getVideoLinks(data, listIndexes);
+    let listCount = 0;
     for (let item of data)
     {
         if (!item.trim()) break; // stop on an empty line
 
         const row = item.split("\t");
-        let id = row[listIndexes.id], listEntry = getListEntry(row, listIndexes);
-        if (isInteger(id)) demonList.set(id, listEntry);
+        let id = row[listIndexes.id];
+        if (isInteger(id)) {
+            const videoLink = videoLinks[listCount];
+            listEntry = getListEntry(row, listIndexes, videoLink);
+            demonList.set(id, listEntry);
+            listCount++;
+        }
 
         let countExpr = /: (?<demonCount>\d+)$/;
         let match = row[listIndexes.count].match(countExpr);
@@ -355,6 +363,19 @@ function parseDemonList(data)
         addEntrytoList(attemptExpr, row[listIndexes.attempt], attemptMessage, attemptList);
     }
     return [demonList, demonCounts, abcList, monthList, attemptList];
+}
+
+function getVideoLinks(data, listIndexes) 
+{
+    let videoLinks = []
+    for (let item of data) {
+        const row = item.split("\t");
+        const videoLink = row[listIndexes.videoLink];
+        if (videoLink != "") {
+            videoLinks.push(row[listIndexes.videoLink]);
+        }
+    }
+    return videoLinks;
 }
 
 function updateChangelog(clickedPage = 1)
