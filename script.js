@@ -370,11 +370,12 @@ function getVideoLinks(data, listIndexes)
     let videoLinks = []
     for (let item of data) {
         const row = item.split("\t");
-        const videoLink = row[listIndexes.videoLink];
+        const videoLink = row[listIndexes.videoLink].trim();
         if (videoLink != "") {
             videoLinks.push(row[listIndexes.videoLink]);
         }
     }
+    console.log(videoLinks)
     return videoLinks;
 }
 
@@ -415,6 +416,7 @@ async function fetchSheetData(isLoadingListTab = false)
         }
     }
 
+    console.log(isNavigate);
     if (isReload || isHomePage && isNavigate)
     {
         const updateContainer = document.querySelector(".update-container");
