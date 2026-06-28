@@ -249,7 +249,7 @@ function updateBoxes(demonCounts, boxLists)
     const totalExtremes = Number(mainExtremes) + Number(legacyExtremes), totalInsanes = Number(mainInsanes) + Number(legacyInsanes);
     
     let countMessage = `Right now, the list has <span class="purple-bold">${totalExtremes} Extreme Demons</span> (${legacyExtremes} of which are legacy) and <span class="purple-bold">${totalInsanes} Insane Demons</span> (${legacyInsanes} of which are legacy).`;
-    [["0 of which", "none of which"], ["(1 of which are", "(1 of which is"]].forEach(([oldString, newString]) => countMessage = countMessage.replace(oldString, newString));
+    [["(0 of which", "(none of which"], ["(1 of which are", "(1 of which is"]].forEach(([oldString, newString]) => countMessage = countMessage.replace(oldString, newString));
     
     const demonCountElem = document.getElementById(ELEM_IDS.demonCount);
     demonCountElem.innerHTML = countMessage;
