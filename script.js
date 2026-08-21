@@ -1,8 +1,7 @@
-const PAGE_MARKER = 7; // how many entries are on a page
+const PAGE_MARKER = 2; // how many entries are on a page
 const ELEM_IDS = {"logs": "changelogs", "pagination": "changelog-pages", "demonCount": "demon-counts"};
 
 let currentPage, pageCount;
-let clickListener, keyupListener;
 let listChangelog, demonList;
 
 function createInput(inputValue, isDisabled = false)
@@ -27,45 +26,34 @@ function createInput(inputValue, isDisabled = false)
     return `<input class="btn btn-custom" type="button" value="${inputValue}" onclick="updateChangelog(${inputValue});">`;
 }
 
-function submitInput(event, action, clickedTrunc)
-{
-    let isSubmission = false;
-    switch (action)
-    {
-        case "click":
-            isSubmission = event.target != clickedTrunc;
-            break;
-        case "keyup":
-            isSubmission = event.code == "Enter";
-            break;
-    }
-
-    if (isSubmission)
-    {
-        let newPage = Number(clickedTrunc.value);
-        newPage = newPage >= 1 && newPage <= pageCount ? newPage : currentPage;
-        updateChangelog(newPage);
-    }
-}
-
 function getNewPageInput(inputID)
 {
     const clickedTrunc = document.getElementById(inputID);
     clickedTrunc.type = "number";
     clickedTrunc.value = clickedTrunc.name;
-    
-    clickListener = (event) => submitInput(event, "click", clickedTrunc); // i fucking hate javascript ~ uses listeners variables so they can be properly removed later
-    keyupListener = (event) => submitInput(event, "keyup", clickedTrunc);
-    
-    document.addEventListener("click", clickListener);
-    document.addEventListener("keyup", keyupListener);
+
+    document.onclick = function(event) {
+        if (event.target != clickedTrunc)
+        {
+            let newPage = Number(clickedTrunc.value);
+            newPage = newPage >= 1 && newPage <= pageCount ? newPage : currentPage;
+            updateChangelog(newPage);
+            return;
+        }
+    };
+    document.onkeyup = function(event) {
+        if (event.code == "Enter")
+        {
+            let newPage = Number(clickedTrunc.value);
+            newPage = newPage >= 1 && newPage <= pageCount ? newPage : currentPage;
+            updateChangelog(newPage);
+            return;
+        }
+    };
 }
 
 function updatePagination(clickedPage)
 {
-    document.removeEventListener("click", clickListener);
-    document.removeEventListener("keyup", keyupListener);
-
     const changelogButtons = document.getElementById(ELEM_IDS.pagination);
     let pageButtonsHTML = "";
     currentPage = clickedPage;
@@ -375,15 +363,12 @@ function getVideoLinks(data, listIndexes)
             videoLinks.push(row[listIndexes.videoLink]);
         }
     }
-    console.log(videoLinks)
+    // console.log(videoLinks)
     return videoLinks;
 }
 
 function updateChangelog(clickedPage = 1)
-{
-    document.removeEventListener("click", clickListener);
-    document.removeEventListener("keyup", keyupListener);
-    
+{    
     updatePagination(clickedPage);
     updateActivePage(clickedPage);
 }
@@ -408,46 +393,58 @@ async function fetchSheetData(isLoadingListTab = false)
         const [demonListData, demonCounts, ...lists] = parseDemonList(listData); // ... gets the rest of the list to the variable
         demonList = demonListData;
         if (isLoadingListTab) {
-            addLevels();
-            updateListVisuals();
+            if (isReload) {
+                sessionStorage.removeItem("sort-type");
+                sessionStorage.removeItem("sort-direction");
+            }
+            // get sortType and sortDirection from session storage
+            const sortType = sessionStorage.getItem("sort-type");
+            const sortDirection = sessionStorage.getItem("sort-direction");
+            // default is down so if sortDirection is ascending, set flipDirection = true, otherwise make it false
+            const flipDirection = sortDirection == "ascending" ? true : false;
+            sortLevelSets(flipDirection, sortType);
         }
         else {
             updateBoxes(demonCounts, lists);
         }
     }
 
-    console.log(isNavigate);
+    // console.log(isNavigate);
     if (isReload || isHomePage && isNavigate)
     {
-        const updateContainer = document.querySelector(".update-container");
-        updateContainer.style.opacity = 100;
-
-        const changelogURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQiHBiXlIZGJzidxWfpn4PbMhVRP_xO0ozivg0J60YqW9lAmU99lgala5r4Fc7BT84aX28ZxkKWLEPi/pub?gid=1804136036&single=true&output=tsv";
-        const demonListURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQiHBiXlIZGJzidxWfpn4PbMhVRP_xO0ozivg0J60YqW9lAmU99lgala5r4Fc7BT84aX28ZxkKWLEPi/pub?gid=1881466420&single=true&output=tsv";
-        
-        let response = await fetch(changelogURL);
-        changelogData = await response.text();
-        localStorage.setItem("changelog", changelogData);
-
-        listChangelog = parseChangelog(changelogData);
-        pageCount = Math.ceil(listChangelog.size / PAGE_MARKER);
-        if (!isLoadingListTab) updateChangelog();
-
-        response = await fetch(demonListURL);
-        listData = await response.text();
-        localStorage.setItem("demon-list", listData);
-
-        const [demonListData, demonCounts, ...lists] = parseDemonList(listData); // ... gets the rest of the list to the variable
-        demonList = demonListData;
-        if (isLoadingListTab) {
-            addLevels();
-            updateListVisuals();
-        }
-        else {
-            updateBoxes(demonCounts, lists);
-        }
-        hideUpdateContainer();
+        refetchSheetData(isLoadingListTab)
     }
+}
+
+async function refetchSheetData(isLoadingListTab)
+{
+    const updateContainer = document.querySelector(".update-container");
+    updateContainer.style.opacity = 100;
+
+    const changelogURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQiHBiXlIZGJzidxWfpn4PbMhVRP_xO0ozivg0J60YqW9lAmU99lgala5r4Fc7BT84aX28ZxkKWLEPi/pub?gid=1804136036&single=true&output=tsv";
+    const demonListURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQiHBiXlIZGJzidxWfpn4PbMhVRP_xO0ozivg0J60YqW9lAmU99lgala5r4Fc7BT84aX28ZxkKWLEPi/pub?gid=1881466420&single=true&output=tsv";
+    
+    let response = await fetch(changelogURL);
+    changelogData = await response.text();
+    localStorage.setItem("changelog", changelogData);
+
+    listChangelog = parseChangelog(changelogData);
+    pageCount = Math.ceil(listChangelog.size / PAGE_MARKER);
+    if (!isLoadingListTab) updateChangelog();
+
+    response = await fetch(demonListURL);
+    listData = await response.text();
+    localStorage.setItem("demon-list", listData);
+
+    const [demonListData, demonCounts, ...lists] = parseDemonList(listData); // ... gets the rest of the list to the variable
+    demonList = demonListData;
+    if (isLoadingListTab) {
+        sortLevelSets();
+    }
+    else {
+        updateBoxes(demonCounts, lists);
+    }
+    hideUpdateContainer();
 }
 
 async function loadLevels()
@@ -462,14 +459,14 @@ function getLevelThumbnail(imageElem, id) {
 }
 
 // non home page
-function addLevels() 
+function addLevels(sortedDemonList = null) 
 {
     const listElem = document.querySelector(".levels-container");
     const templateElem = document.getElementsByTagName("template")[0];
     const cardTemplate = templateElem.content.querySelector("a");
     
     listElem.innerHTML = "";
-    let demonListSets = Array.from(demonList.entries());
+    let demonListSets = sortedDemonList == null ? Array.from(demonList.entries()) : sortedDemonList;
     const pageName = location.pathname.split("/").pop();
     if (pageName == "main-list.html")
     {
@@ -526,3 +523,92 @@ function hideUpdateContainer()
     updateContainer.classList.add('update-animate');
     updateContainer.style.opacity = 0;
 }
+
+function showSortOptions()
+{
+    const sortOptions = document.querySelector(".sort-options");
+    window.onresize = function(event) {
+        document.querySelector(".sort-options").style.width = `${document.querySelector(".btn-sort").offsetWidth}px`;
+    }
+
+    document.onclick = function(event) {
+        if (sortOptions.style.display == "flex") { // clicked on dropdown option
+            const dropdownBtn = event.target;
+            if (dropdownBtn.value != undefined) { // sorting by selected filter
+                sortLevelSets(false, dropdownBtn.value);
+                saveFilters(dropdownBtn.value);
+            }
+
+            sortOptions.style.display = "none";
+            document.activeElement.blur(); // removes focus from active element
+            document.getElementsByTagName("body")[0].style.pointerEvents = "all"; // restore input
+        }
+        else if (event.target == document.querySelector(".btn-sort")) {
+            sortOptions.style.display = "flex";
+            document.getElementsByTagName("body")[0].style.pointerEvents = "none";
+            sortOptions.style.pointerEvents = "all"; // remove input from everything except the dropdown
+            document.querySelector(".sort-options").style.width = `${document.querySelector(".btn-sort").offsetWidth}px`;
+        }
+        else if (event.target == document.querySelector(".btn-sort-direction")) {
+            sortLevelSets(true);
+            const sortType = getSortType();
+            saveFilters(sortType);
+        }
+    };
+    document.onmouseup = function(event) {
+        if (event.target == document.querySelector(".btn-sort-direction")) {
+            document.activeElement.blur();
+        }
+    }
+}
+
+function saveFilters(sortType) 
+{
+    const sortButton = document.querySelector(".btn-sort-direction");
+    const sortDirection = sortButton.value == "\u2191" ? "ascending" : "descending";
+
+    sessionStorage.setItem("sort-type", sortType);
+    sessionStorage.setItem("sort-direction", sortDirection);
+}
+
+function getSortType(flipDirection = false) {
+    const dropdownBtn = document.querySelector(".btn-sort");
+    const sortExpr = /Sort by: (?<sortType>.+) \u25BE/;
+    return sortExpr.exec(dropdownBtn.value)[1];
+}
+
+function sortLevelSets(flipDirection = false, dropdownValue = null)
+{
+    // NOTE: u2193 == down / u2191 == up
+    if (dropdownValue == null) {
+        dropdownValue = getSortType(flipDirection);
+    }
+    if (flipDirection) {
+        const sortButton = document.querySelector(".btn-sort-direction");
+        sortButton.value = sortButton.value == "\u2193" ? "\u2191" : "\u2193";
+    }
+
+    const OPTIONS = {"GDDL": 6, "ID": 7, "Enjoyment": 8, "Worst Death": 9, "Attempts": 10};
+    let demonListValues = Array.from(demonList.values());
+    const sortDirectionBtn = document.querySelector(".btn-sort-direction");
+    
+    if (dropdownValue != "Default") { // remove , and % for proper sorting on wf and attempts
+        demonListValues.sort((a,b) => b[OPTIONS[dropdownValue]].replace(",", "").replace("%", "") - a[OPTIONS[dropdownValue]].replace(",", "").replace("%", ""));
+    }
+    if (sortDirectionBtn.value == "\u2191") {
+        demonListValues.reverse();
+    }
+
+    let sortedDemonList = [];
+    demonListValues.forEach((item, index) => {
+        item[0] = index + 1;
+        sortedDemonList.push([item[OPTIONS.ID], item]);
+    });
+    
+    addLevels(sortedDemonList);
+    updateListVisuals();
+    document.querySelector(".btn-sort").value = `Sort by: ${dropdownValue} \u25BE`;
+}
+
+// TODO: save filter changes across pages, session storage perhaps, and then load them when the page loads
+// TODO: add comments?

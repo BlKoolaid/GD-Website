@@ -47,6 +47,7 @@
         <main>
             <h1 id="title" class="white-bold">The <span class="purple-bold">Legacy</span> List</h1>
             <p id="subtitle">Consists of the levels that are no longer on the list.</p>
+            
             <div class="loader-container">
                 <div class="box-loader"></div>
             </div>
@@ -104,6 +105,28 @@
                     </div>
                 </a>
             </template>
+            
+            <div class="sort-container">
+                <div class="sort-btns">
+                    <input class="btn btn-sort animate-bottom" type="button" value="Sort by: Default &#9662;" onclick="showSortOptions();">
+                    <input class="btn btn-sort btn-sort-direction animate-bottom" type="button" value="&#8595;" onclick="showSortOptions();">
+                </div>
+
+                <div class="sort-options">
+                    <input class="btn btn-dropdown" value="Default" onclick="showSortOptions();" readonly>
+                    <hr class="sort-hr">
+                    <input class="btn btn-dropdown" value="ID" onclick="showSortOptions();" readonly>
+                    <hr class="sort-hr">
+                    <input class="btn btn-dropdown" value="GDDL" onclick="showSortOptions();" readonly>
+                    <hr class="sort-hr">
+                    <input class="btn btn-dropdown" value="Enjoyment" onclick="showSortOptions();" readonly>
+                    <hr class="sort-hr">
+                    <input class="btn btn-dropdown" value="Attempts" onclick="showSortOptions();" readonly>
+                    <hr class="sort-hr">
+                    <input class="btn btn-dropdown" value="Worst Death" onclick="showSortOptions();" readonly>
+                </div>
+            </div>
+            
             <div class="levels-container animate-bottom"></div>
 
             <div class="update-container">
