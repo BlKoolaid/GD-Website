@@ -450,7 +450,7 @@ async function refetchSheetData(isLoadingListTab)
 
 async function loadLevels()
 {
-    const isLoadingListTab = true
+    const isLoadingListTab = true;
     await fetchSheetData(isLoadingListTab);
 }
 
