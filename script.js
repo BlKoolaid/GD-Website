@@ -610,5 +610,29 @@ function sortLevelSets(flipDirection = false, dropdownValue = null)
     document.querySelector(".btn-sort").value = `Sort by: ${dropdownValue} \u25BE`;
 }
 
+function showToast()
+{
+    const toastElem = document.getElementById("toast-alert");
+    clearTimeout(toastTimer);
+
+    toastElem.style.opacity = 1;
+    toastTimer = setTimeout(() => {
+        toastElem.style.opacity = 0;
+    }, 2000);
+}
+
+// ? DELETE
+function copyToClipboard()
+{
+    document.onclick = function(event) {
+        const levelCard = event.target;
+        console.log(levelCard);
+    }
+        
+    // const text = document.getElementById(id).value;
+    // navigator.clipboard.writeText(text);
+    // showToast();
+}
+
 // TODO: save filter changes across pages, session storage perhaps, and then load them when the page loads
 // TODO: add comments?

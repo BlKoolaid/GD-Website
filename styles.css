@@ -483,6 +483,10 @@ input[type=number] {
     gap: 10px;
 }
 
+a {
+    user-select: none;
+}
+
 .info-top, .info-left, .info-right {
     display: flex;
     justify-content: space-around;
