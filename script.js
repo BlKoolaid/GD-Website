@@ -3,6 +3,7 @@ const ELEM_IDS = {"logs": "changelogs", "pagination": "changelog-pages", "demonC
 
 let currentPage, pageCount;
 let listChangelog, demonList;
+let toastTimer;
 
 function createInput(inputValue, isDisabled = false)
 {
@@ -489,6 +490,10 @@ function addLevels(sortedDemonList = null)
         classList.forEach((classElem, index) => {
             const attribute = levelDataSet[index];
             classElem.textContent = attribute;
+            
+            if (classElem.classList.contains("id")) {
+                levelCard.id = attribute;
+            }
         });
         const videoLink = levelDataSet[levelDataSet.length - 1];
         if (videoLink.includes("http"))
@@ -621,17 +626,10 @@ function showToast()
     }, 2000);
 }
 
-// ? DELETE
-function copyToClipboard()
+function copyToClipboard(card)
 {
-    document.onclick = function(event) {
-        const levelCard = event.target;
-        console.log(levelCard);
-    }
-        
-    // const text = document.getElementById(id).value;
-    // navigator.clipboard.writeText(text);
-    // showToast();
+    navigator.clipboard.writeText(card.id);
+    showToast();
 }
 
 // TODO: save filter changes across pages, session storage perhaps, and then load them when the page loads

@@ -504,6 +504,27 @@ a {
     text-align: center;
 }
 
+#toast-alert {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    line-height: 1;
+    background-color: rgba(152, 41, 203, 0.934);
+    font-size: 0.75em;
+    width: 125px;
+    height: 30px;
+    border-radius: 5px;
+    position: fixed;
+    bottom: 15px;
+    left: 15px;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+}
+
+#toast-alert p {
+    margin: 0px;
+}
+
 /* only main lists */
 @media (max-width: 994px) {
     .card p {
