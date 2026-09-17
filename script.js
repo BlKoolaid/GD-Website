@@ -1,4 +1,4 @@
-const PAGE_MARKER = 2; // how many entries are on a page
+const PAGE_MARKER = 7; // how many entries are on a page
 const ELEM_IDS = {"logs": "changelogs", "pagination": "changelog-pages", "demonCount": "demon-counts"};
 
 let currentPage, pageCount;
